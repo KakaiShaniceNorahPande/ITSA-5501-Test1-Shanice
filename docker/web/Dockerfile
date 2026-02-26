@@ -4,7 +4,7 @@ FROM node:20-alpine
 # Setting the working directory
 WORKDIR /usr/src/app
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 # Installing application dependencies
 RUN npm ci --omit=dev || npm install --omit=dev
