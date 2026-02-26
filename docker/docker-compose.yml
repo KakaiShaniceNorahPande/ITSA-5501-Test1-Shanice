@@ -27,8 +27,6 @@ services:
       - redis
     restart: always
 
-services:
-  web:
     build:
       context: .
       dockerfile: Dockerfile
