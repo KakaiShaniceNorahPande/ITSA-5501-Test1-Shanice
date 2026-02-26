@@ -1,40 +1,33 @@
 version: "3.9"
 
 services:
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "60", "1", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
   web:
-    build: ./web                 # build key
-    ports:
-      - "8080:3000"
-    environment:                 # environment key
+    build: ./web
+    environment:
+      PORT: 3000
       REDIS_HOST: redis
       REDIS_PORT: 6379
-    volumes:                     # volumes key
-      - ./web:/usr/src/app
+    ports:
+      - "8080:3000"
     depends_on:
       - redis
-    restart: always
+    restart: unless-stopped
 
   rotator:
     build: ./rotator
-    ports:
-      - "3001:3000"
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
-    volumes:
-      - ./rotator:/usr/src/app
+      ROTATE_MS: 5000
     depends_on:
       - redis
-    restart: always
+    restart: unless-stopped
 
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    restart: always
+volumes:
+  redis-data:
