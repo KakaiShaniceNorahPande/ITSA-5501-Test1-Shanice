@@ -27,6 +27,10 @@ services:
       - redis
     restart: always
 
+  build:
+  context: ./docker
+  dockerfile: Dockerfile
+
   redis:
     image: redis:alpine
     ports:
